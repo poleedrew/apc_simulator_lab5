@@ -3,7 +3,7 @@ const { cron, domainService } = require('config');
 const axios = require('axios');
 const uuidv4 = require('uuid').v4;
 
-const types = ['SHARON', 'RIB_EYE'];
+const types = ['SHARON', 'RIB_EYE', 'FILET']; // 沙朗 肋眼 菲力
 
 const run = async () => {
   const handler = setInterval(async () => {
@@ -13,8 +13,8 @@ const run = async () => {
     const payload = {
       id,
       type: types[index],
-      thickness: 2 + Math.random().toFixed(2),
-      moisture: 6 + Math.random().toFixed(2),
+      thickness: (Math.random() + 1.8).toFixed(2),
+      moisture: (Math.random()+6).toFixed(2),
     };
 
     const { data } = await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
