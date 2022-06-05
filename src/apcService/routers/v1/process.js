@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
+const { defaultStrategy, sharonStrategy , filetStrategy} = require('../../utilities/strategyUtil');
 
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
@@ -24,13 +24,20 @@ router.post('/api/v1/process', async (req, res) => {
     const mFactor = global.cache.get('FACTOR_MOISTURE');
 
     let data = null;
-    if (type === 'SHARON') {
-      data = sharonStrategy(thickness, tFactor);
-    } else {
-      data = defaultStrategy(moisture, mFactor);
-    }
+    
 
+
+    if (type === 'SHARON') {
+      
+      data = sharonStrategy(thickness, moisture, tFactor);
+    } else if(type === 'FILET'){
+      data = filetStrategy(thickness, moisture, mFactor);
+    } else {
+      data = defaultStrategy(thickness, moisture, mFactor);
+    }
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
+
+    // logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {

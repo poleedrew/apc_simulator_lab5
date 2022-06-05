@@ -22,7 +22,7 @@ const run = async () => {
       const handler = setInterval(async () => {
         const tFactor = Math.random().toFixed(2);
         const mFactor = Math.random().toFixed(2);
-
+        // axios.post(`1231321313aaaaaaaaaaaaaaa`)
         await axios.post(`${domainService.params.endpoint}/api/v1/factor/thickness`, { factor: tFactor });
         await axios.post(`${domainService.params.endpoint}/api/v1/factor/moisture`, { factor: mFactor });
       }, cron.paramsPeriod);

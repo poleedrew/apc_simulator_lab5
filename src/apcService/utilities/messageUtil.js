@@ -14,6 +14,10 @@ const natsMessageHandler = (message) => {
     global.cache.set('FACTOR_MOISTURE', msgObj.factor);
 
     logger.info(`receive moisture factor: ${msgObj.factor}`);
+  } else if (msgObj.type === 'FACTOR_MOISTUREs') {
+    global.cache.set('FACTOR_MOISTUREs', msgObj.factor);
+
+    logger.info(`receive moistures factor: ${msgObj.factor}`);
   }
 };
 
