@@ -1,7 +1,9 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { nats } = require('config');
+const { mongodb, nats } = require('config');
+
+const MongoClient = require('mongodb').MongoClient;
 
 const NodeCache = require('node-cache');
 
@@ -42,17 +44,31 @@ const initGlobalNATSClient = async () => {
   await global.natsClient.addConsumer(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`);
 };
 
-const initGlobalCache = async () => {
-  global.cache = new NodeCache();
+const initMongoDB = async () => {  
+  MongoClient.connect(mongodb.url.concat(mongodb.db), function(err, db) {
+    if (err) throw err;
+    db.close();
+  });
 
-  global.cache.set('FACTOR_THICKNESS', 0.5);
-  global.cache.set('FACTOR_MOISTURE', 0.5);
+  MongoClient.connect(mongodb.url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db(mongodb.db);
+    var factors = [
+        { name: "THICKNESS", value: 0.5 },
+        { name: "MOISTURE", value: 0.5 }
+    ];
+
+    dbo.collection(mongodb.collection).insertMany(factors, function(err, res) {
+      if (err) throw err;
+      db.close();
+    });
+  });
 };
 
 const run = async () => {
   // initialize the global resource
   await initGlobalNATSClient();
-  await initGlobalCache();
+  await initMongoDB();
 
   // run all services
   await apcService.run();

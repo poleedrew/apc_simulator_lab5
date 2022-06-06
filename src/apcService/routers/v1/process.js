@@ -1,3 +1,7 @@
+const MongoClient = require('mongodb').MongoClient;
+
+const { mongodb } = require('config');
+
 const express = require('express');
 
 const { defaultStrategy, sharonStrategy , filetStrategy} = require('../../utilities/strategyUtil');
@@ -17,14 +21,29 @@ router.post('/api/v1/process', async (req, res) => {
   });
 
   try {
-    if (!global.cache) {
-      throw new Error('the global cache is not existed');
-    }
-    const tFactor = global.cache.get('FACTOR_THICKNESS');
-    const mFactor = global.cache.get('FACTOR_MOISTURE');
+    var tFactor, mFactor;
+    
+    MongoClient.connect(mongodb.url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db(mongodb.db);
+      dbo.collection(mongodb.collection).findOne({name: "THICKNESS"}, function(err, result) {
+        if (err) throw err;
+        tFactor = result.value;
+        db.close();
+      });
+    });
+
+    MongoClient.connect(mongodb.url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db(mongodb.db);
+      dbo.collection(mongodb.collection).findOne({name: "MOISTURE"}, function(err, result) {
+        if (err) throw err;
+        mFactor = result.value;
+        db.close();
+      });
+    });
 
     let data = null;
-    
 
 
     if (type === 'SHARON') {
