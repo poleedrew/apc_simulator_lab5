@@ -53,12 +53,22 @@ const initMongoDB = async () => {
   MongoClient.connect(mongodb.url, function(err, db) {
     if (err) throw err;
     var dbo = db.db(mongodb.db);
-    var factors = [
-        { name: "THICKNESS", value: 0.5 },
-        { name: "MOISTURE", value: 0.5 }
-    ];
+    var query = { name: "THICKNESS" };
+    var newValues = { $set: { value: 0.5 } };
+    var options = { upsert: true };
+    dbo.collection(mongodb.collection).updateOne(query, newValues, options, function(err, res) {
+      if (err) throw err;
+      db.close();
+    });
+  });
 
-    dbo.collection(mongodb.collection).insertMany(factors, function(err, res) {
+  MongoClient.connect(mongodb.url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db(mongodb.db);
+    var query = { name: "MOISTURE" };
+    var newValues = { $set: { value: 0.5 } };
+    var options = { upsert: true };
+    dbo.collection(mongodb.collection).updateOne(query, newValues, options, function(err, res) {
       if (err) throw err;
       db.close();
     });
