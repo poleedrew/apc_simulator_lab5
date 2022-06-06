@@ -75,5 +75,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: poleedrew/cloudnativelab5:latest
+          tags: cloudnativelab5/final_project:latest
 
