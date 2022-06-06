@@ -1,61 +1,29 @@
-# name: CI
-# on:
-#   push: 
-
-# jobs:
-#   main:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
-#         with:
-#           fetch-depth: 0
-#       - name: start docker compose
-#         run: docker-compose up -d
-#       - name: install dependencies
-#         run: npm ci
-#       - name: run tests
-#         run: npm test
-#       - name: stop docker compose
-#         run: docker-compose down
-#       - name: Process jest results with default
-#         if: always()
-#         uses: im-open/process-jest-test-results@v2.0.5
-#         with:
-#           github-token: ${{ secrets.GITHUB_TOKEN }}
-#           results-file: 'result.json'
-          
-#   push_to_registry:
-#     name: Push Docker image to Docker Hub
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Check out the repo
-#         uses: actions/checkout@v3
-      
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKER_HUB_ACCOUNT }}
-#           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      
-#       - name: Extract metadata (tags, labels) for Docker
-#         id: meta
-#         uses: docker/metadata-action@v2
-#         with:
-#           images: ${{ secrets.DOCKER_HUB_ACCOUNT }}/${{ DOCKER_HUB_REPOSITORY }}
-          
-#       - name: Build and push Docker image
-#         uses: docker/build-push-action@v2
-#         with:
-#           context: .
-#           push: true
-#           tags: ${{ steps.meta.outputs.tags }}
-#           labels: ${{ steps.meta.outputs.labels }}
 name: CI
 on:
-  push:
-    branches:
-      - "310551128"
+  push: 
+
 jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: start docker compose
+        run: docker-compose up -d
+      - name: install dependencies
+        run: npm ci
+      - name: run tests
+        run: npm test
+      - name: stop docker compose
+        run: docker-compose down
+      - name: Process jest results with default
+        if: always()
+        uses: im-open/process-jest-test-results@v2.0.5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          results-file: 'result.json'
+
   Dockerize:
     name: Publish Docker
     runs-on: ubuntu-latest
