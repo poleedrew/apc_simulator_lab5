@@ -1,3 +1,5 @@
+![example workflow](https://github.com/poleedrew/apc_simulator_lab5/actions/workflows/CI.yml/badge.svg) ![example workflow](https://github.com/poleedrew/apc_simulator_lab5/actions/workflows/CD(DokerHub).yml/badge.svg)
+
 # User Guide
 
 - ## Environment Settings
