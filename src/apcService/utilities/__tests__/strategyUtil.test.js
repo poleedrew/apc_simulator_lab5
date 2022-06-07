@@ -8,7 +8,7 @@ describe('Module strategyUtil', () => {
   const fakeMFactor = 0.5;
 
   it('Method sharonStrategy', () => {
-    const res = sharonStrategy(fakeThickness, fakeMoisture, fakeTFactor);
+    const res = sharonStrategy(fakeThickness, fakeTFactor, fakeMoisture, fakeMFactor);
 
     expect(res).toStrictEqual({
       period: 20,
@@ -17,7 +17,7 @@ describe('Module strategyUtil', () => {
   });
 
   it('Method filetStrategy', () => {
-    const res = filetStrategy(fakeThickness, fakeMoisture, fakeMFactor);
+    const res = filetStrategy(fakeThickness, fakeTFactor, fakeMoisture, fakeMFactor);
 
     expect(res).toStrictEqual({
       period: (fakeMoisture * fakeMFactor).toFixed(2),
@@ -26,7 +26,7 @@ describe('Module strategyUtil', () => {
   });
 
   it('Method defaultStrategy', () => {
-    const res = defaultStrategy(fakeThickness, fakeMoisture, fakeMFactor);
+    const res = defaultStrategy(fakeThickness, fakeTFactor, fakeMoisture, fakeMFactor);
 
     expect(res).toStrictEqual({
       period: (fakeMoisture * fakeMFactor).toFixed(2),
@@ -35,7 +35,7 @@ describe('Module strategyUtil', () => {
   });
 
   it('Small steak test', () => {
-    const res = defaultStrategy(fakeSmallThickness, fakeMoisture, fakeMFactor);
+    const res = defaultStrategy(fakeSmallThickness, fakeTFactor, fakeMoisture, fakeMFactor);
 
     expect(res).toStrictEqual({
       mes: 'TOOOO SMALL'

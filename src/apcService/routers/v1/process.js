@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy , filetStrategy} = require('../../utilities/strategyUtil');
+const { getStrategy } = require('../../utilities/strategyUtil');
 
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
@@ -17,19 +17,14 @@ router.post('/api/v1/process', async (req, res) => {
   });
 
   try {
-    var tFactor = await global.mongoDB.find("FACTOR_THICKNESS");
-    var mFactor = await global.mongoDB.find("FACTOR_MOISTURE");
+    var tFactor = await global.mongoDB.find("FACTOR_THICKNESS").catch(err => { console.log(err); });
+    var mFactor = await global.mongoDB.find("FACTOR_MOISTURE").catch(err => { console.log(err); });
 
     let data = null;
 
-    if (type === 'SHARON') {
-      
-      data = sharonStrategy(thickness, moisture, tFactor);
-    } else if(type === 'FILET'){
-      data = filetStrategy(thickness, moisture, mFactor);
-    } else {
-      data = defaultStrategy(thickness, moisture, mFactor);
-    }
+    let strategy = getStrategy(type);
+    data = strategy(thickness, tFactor, moisture, mFactor);
+    
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     // logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
