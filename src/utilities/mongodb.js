@@ -30,17 +30,27 @@ class MongoDB {
         });
     }
 
-    find(target, url = this.url, dbName = this.dbName, collection = this.collection) {
+    async find(target, url = this.url, dbName = this.dbName, collection = this.collection) {
         var result;
-        MongoClient.connect(url, function(err, client) {
-            if (err) throw err;
-            var dbo = client.db(dbName);
-            dbo.collection(collection).findOne({name: target}, function(err, res) {
-                if (err) throw err;
-                result = res.value;
-                client.close();
-            });
-        });
+        const client = await MongoClient.connect(url).catch(err => { console.log(err); });
+
+        if (!client) {
+            return;
+        }
+    
+        try {
+            const db = client.db(dbName);
+            let coll = db.collection(collection);
+            let query = { name: target };
+            let res = await coll.findOne(query);
+    
+            result = res.value;
+    
+        } catch (err) {
+            console.log(err);
+        } finally {
+            client.close();
+        }
         return result;
     }
 }

@@ -17,8 +17,8 @@ router.post('/api/v1/process', async (req, res) => {
   });
 
   try {
-    var tFactor = global.mongoDB.find("FACTOR_THICKNESS");
-    var mFactor = global.mongoDB.find("FACTOR_MOISTURE");
+    var tFactor = await global.mongoDB.find("FACTOR_THICKNESS");
+    var mFactor = await global.mongoDB.find("FACTOR_MOISTURE");
 
     let data = null;
 
