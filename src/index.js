@@ -41,8 +41,8 @@ const initGlobalNATSClient = async () => {
 const initMongoDB = async () => { 
   global.mongoDB = MongoDB.instance(); 
   global.mongoDB.createDB();
-  global.mongoDB.upsert("THICKNESS", 0.5);
-  global.mongoDB.upsert("MOISTURE", 0.5);
+  global.mongoDB.upsert("FACTOR_THICKNESS", 0.5);
+  global.mongoDB.upsert("FACTOR_MOISTURE", 0.5);
 };
 
 const run = async () => {
