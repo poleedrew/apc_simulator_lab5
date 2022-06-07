@@ -1,7 +1,3 @@
-const MongoClient = require('mongodb').MongoClient;
-
-const { mongodb } = require('config');
-
 const express = require('express');
 
 const { defaultStrategy, sharonStrategy , filetStrategy} = require('../../utilities/strategyUtil');
@@ -21,30 +17,10 @@ router.post('/api/v1/process', async (req, res) => {
   });
 
   try {
-    var tFactor, mFactor;
-    
-    MongoClient.connect(mongodb.url, function(err, db) {
-      if (err) throw err;
-      var dbo = db.db(mongodb.db);
-      dbo.collection(mongodb.collection).findOne({name: "THICKNESS"}, function(err, result) {
-        if (err) throw err;
-        tFactor = result.value;
-        db.close();
-      });
-    });
-
-    MongoClient.connect(mongodb.url, function(err, db) {
-      if (err) throw err;
-      var dbo = db.db(mongodb.db);
-      dbo.collection(mongodb.collection).findOne({name: "MOISTURE"}, function(err, result) {
-        if (err) throw err;
-        mFactor = result.value;
-        db.close();
-      });
-    });
+    var tFactor = global.mongoDB.find("THICKNESS");
+    var mFactor = global.mongoDB.find("MOISTURE");
 
     let data = null;
-
 
     if (type === 'SHARON') {
       
