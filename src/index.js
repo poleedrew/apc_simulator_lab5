@@ -1,14 +1,8 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
-const { mongodb, nats } = require('config');
-
-const MongoClient = require('mongodb').MongoClient;
-
-const NodeCache = require('node-cache');
+const { nats } = require('config');
 
 const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
+const MongoDB = require('./utilities/mongodb');
 
 const measureService = require('./measureService');
 const apcService = require('./apcService');
@@ -44,35 +38,11 @@ const initGlobalNATSClient = async () => {
   await global.natsClient.addConsumer(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`);
 };
 
-const initMongoDB = async () => {  
-  MongoClient.connect(mongodb.url.concat(mongodb.db), function(err, db) {
-    if (err) throw err;
-    db.close();
-  });
-
-  MongoClient.connect(mongodb.url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db(mongodb.db);
-    var query = { name: "THICKNESS" };
-    var newValues = { $set: { value: 0.5 } };
-    var options = { upsert: true };
-    dbo.collection(mongodb.collection).updateOne(query, newValues, options, function(err, res) {
-      if (err) throw err;
-      db.close();
-    });
-  });
-
-  MongoClient.connect(mongodb.url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db(mongodb.db);
-    var query = { name: "MOISTURE" };
-    var newValues = { $set: { value: 0.5 } };
-    var options = { upsert: true };
-    dbo.collection(mongodb.collection).updateOne(query, newValues, options, function(err, res) {
-      if (err) throw err;
-      db.close();
-    });
-  });
+const initMongoDB = async () => { 
+  global.mongoDB = MongoDB.instance(); 
+  global.mongoDB.createDB();
+  global.mongoDB.upsert("FACTOR_THICKNESS", 0.5);
+  global.mongoDB.upsert("FACTOR_MOISTURE", 0.5);
 };
 
 const run = async () => {
