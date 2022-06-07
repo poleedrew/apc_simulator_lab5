@@ -9,8 +9,8 @@ describe('Module messageUtil', () => {
   });
 
   it('Method natsMessageHandler for success', async () => {
-    global.cache = {
-      set: jest.fn().mockReturnValueOnce(true),
+    global.mongoDB = {
+      upsert: jest.fn().mockReturnValueOnce(null),
     };
 
     natsMessageHandler(
@@ -20,12 +20,12 @@ describe('Module messageUtil', () => {
       })
     );
 
-    // expect(global.cache.set).toHaveBeenCalledWith(fakeType, fakeFactor);
+    expect(global.mongoDB.upsert).toHaveBeenCalledWith(fakeType, fakeFactor);
   });
 
   it('Method natsMessageHandler for failed', async () => {
-    global.cache = {
-      set: jest.fn().mockReturnValueOnce(true),
+    global.mongoDB = {
+      upsert: jest.fn().mockReturnValueOnce(null),
     };
 
     natsMessageHandler(
@@ -35,6 +35,6 @@ describe('Module messageUtil', () => {
       })
     );
 
-    // expect(global.cache.set).toBeCalledTimes(0);
+    expect(global.mongoDB.upsert).toBeCalledTimes(0);
   });
 });
