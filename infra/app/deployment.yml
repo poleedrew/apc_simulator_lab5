@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: apc-simulator
-          image: leo0009859/apc_simulator_lab5:latest
+          image: cloudnativelab5/final_project:latest
           ports:
             - containerPort: 3030
           env:
