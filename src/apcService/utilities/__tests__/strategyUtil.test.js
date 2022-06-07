@@ -1,4 +1,4 @@
-const { sharonStrategy, defaultStrategy , filetStrategy} = require('../strategyUtil');
+const { sharonStrategy, defaultStrategy , filetStrategy, sirlionStrategy, getStrategy} = require('../strategyUtil');
 
 describe('Module strategyUtil', () => {
   const fakeThickness = 2.0;
@@ -25,6 +25,15 @@ describe('Module strategyUtil', () => {
     });
   });
 
+  it('Method sirlionStrategy', () => {
+    const res = sirlionStrategy(fakeThickness, fakeTFactor, fakeMoisture, fakeMFactor);
+
+    expect(res).toStrictEqual({
+      period: (fakeMoisture * fakeMFactor).toFixed(2),
+      temperature: (fakeThickness * fakeTFactor).toFixed(2),
+    });
+  });
+
   it('Method defaultStrategy', () => {
     const res = defaultStrategy(fakeThickness, fakeTFactor, fakeMoisture, fakeMFactor);
 
@@ -41,4 +50,24 @@ describe('Module strategyUtil', () => {
       mes: 'TOOOO SMALL'
     });
   });
+
+  it('Method getStrategy', () => {
+    var fakeType = 'SHARON'
+    var res = getStrategy(fakeType);
+    expect(res).toStrictEqual(sharonStrategy);
+    
+    fakeType = 'RIB_EYE'
+    res = getStrategy(fakeType);
+    expect(res).toStrictEqual(defaultStrategy);
+
+    fakeType = 'SIRLION'
+    res = getStrategy(fakeType);
+    expect(res).toStrictEqual(sirlionStrategy);
+
+    fakeType = 'FILET'
+    res = getStrategy(fakeType);
+    expect(res).toStrictEqual(filetStrategy);
+
+  });
+  
 });

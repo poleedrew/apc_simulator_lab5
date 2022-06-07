@@ -59,12 +59,12 @@ const filetStrategy = (thickness, moisture, mFactor) => {
 const getStrategy = (type) => {
     if(type === 'SHARON')
       return sharonStrategy;
-    else if( type === 'RIB_EYE')
-      return defaultStrategy;
+    else if( type === 'FILET')
+      return filetStrategy;
     else if( type === 'SIRLION')
       return sirlionStrategy;
     else
-      return filetStrategy;
+      return defaultStrategy;
 }
 
 module.exports = {
