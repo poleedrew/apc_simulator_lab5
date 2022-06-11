@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { getStrategy } = require('../../utilities/strategyUtil');
-
+const { Parameter } = require('../../utilities/parameter');
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
 const router = express.Router();
@@ -22,12 +22,14 @@ router.post('/api/v1/process', async (req, res) => {
 
     let data = null;
 
+    
+    // data = strategy(thickness, tFactor, moisture, mFactor);
+
     let strategy = getStrategy(type);
-    data = strategy(thickness, tFactor, moisture, mFactor);
+    let parameter = new Parameter(thickness, tFactor, moisture, mFactor);
+    data = strategy.calculate(parameter);
     
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
-
-    // logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {
