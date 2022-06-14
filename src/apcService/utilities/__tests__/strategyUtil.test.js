@@ -17,7 +17,6 @@ describe('Module strategyUtil', () => {
     expect(res.moisture).toStrictEqual(fakeMoisture);
     expect(res.thickness).toStrictEqual(fakeThickness);
     expect(res.type).toStrictEqual(fakeType);
-    
   });
 
   it('Method sharonStrategy', () => {
@@ -61,11 +60,24 @@ describe('Module strategyUtil', () => {
   });
 
   it('Small steak test', () => {
+    a = 'TOOOO SMALL'
     const fakepara = new Parameter(fakeSmallThickness, fakeMoisture, fakeTFactor, fakeMFactor, fakeType);
     const res = new defaultStrategy().calculate(fakepara);
+    const res1 = new sirlionStrategy().calculate(fakepara);
+    const res2 = new filetStrategy().calculate(fakepara);
+    const res3 = new sharonStrategy().calculate(fakepara);
 
     expect(res).toStrictEqual({
-      mes: 'TOOOO SMALL'
+      mes: a
+    });
+    expect(res1).toStrictEqual({
+      mes: a
+    });
+    expect(res2).toStrictEqual({
+      mes: a
+    });
+    expect(res3).toStrictEqual({
+      mes: a
     });
   });
 
